@@ -4,6 +4,9 @@ import axios from "axios";
 const VITE_COHERE_API_KEY = import.meta.env.VITE_COHERE_API_KEY;
 
 export const getCohereResult = async (comment) => {
+  const commentTemplate =
+    "Given the done code explanation, write a commit message that describes what the user have done in that code, as summarized as possible, using less than 50 characters. No sentence context needed. Begin with a verb like Add, Change, Fix, Remove, etc.\nCode explanation: ";
+  const commentInput = commentTemplate + comment;
   const options = {
     method: "POST",
     url: "https://api.cohere.ai/generate",
@@ -14,10 +17,16 @@ export const getCohereResult = async (comment) => {
       authorization: `Bearer ${VITE_COHERE_API_KEY}`,
     },
     data: {
-      max_tokens: 20,
-      return_likelihoods: "NONE",
-      truncate: "END",
-      prompt: comment,
+      model: "command-xlarge-nightly",
+      max_tokens: 50,
+      temperature: 0.3,
+      k: 0,
+      p: 0.75,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+      stop_sequences: [],
+      return_likelihood: "NONE",
+      prompt: commentInput,
     },
   };
 
@@ -25,7 +34,7 @@ export const getCohereResult = async (comment) => {
     .request(options)
     .then(function (response) {
       console.log(response.data);
-      return response.data;
+      return response.data.generations[0].text;
     })
     .catch(function (error) {
       console.error(error);

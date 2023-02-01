@@ -3,15 +3,19 @@ import { getCohereResult } from "../../services/cohere";
 
 const CommentScreen = () => {
   const [comment, setComment] = useState("");
-  const [result, setResult] = useState({ generations: [] });
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState("");
 
   const handleComment = (e) => {
     setComment(e.target.value);
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
+    setResult("");
     const result = await getCohereResult(comment);
-    setResult(result);
+    setLoading(false);
+    if (result) setResult(result);
   };
 
   return (
@@ -19,7 +23,8 @@ const CommentScreen = () => {
       <header>Comment it</header>
       <input onChange={handleComment} />
       <button onClick={handleSubmit}>Submit</button>
-      <div>{result?.generations[0]?.text}</div>
+      {loading && <div>Loading...</div>}
+      <div>{result}</div>
     </div>
   );
 };
