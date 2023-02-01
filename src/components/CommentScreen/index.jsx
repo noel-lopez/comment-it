@@ -19,7 +19,7 @@ const CommentScreen = () => {
   };
 
   return (
-    <div className="App">
+    <div className="text-center bg-blue-200 min-h-screen">
       <header>Comment it</header>
       <input onChange={handleComment} />
       <button onClick={handleSubmit}>Submit</button>

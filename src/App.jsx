@@ -1,4 +1,3 @@
-import "./App.css";
 import CommentScreen from "./components/CommentScreen";
 
 function App() {
